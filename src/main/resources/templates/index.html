@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Note</title>
+</head>
+<body>
+  <h1>Các ghi chú</h1>
+  <a th:href="@{/}">Create new Note</a>
+  <table th:each="note:${notes}" border="1" cellpadding="10" cellspacing="0">
+    <tr>
+      <td>STT</td>
+      <td>Tiêu đề</td>
+      <td>Phân loại</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td th:text="${note.title}"></td>
+      <td th:text="${note.noteType.name}"></td>
+      <td>
+        <a th:href="@{/}">Edit</a> | <a th:href="@{/}">Delete</a>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
