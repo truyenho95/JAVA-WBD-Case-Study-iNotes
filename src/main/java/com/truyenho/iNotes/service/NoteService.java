@@ -11,5 +11,5 @@ public interface NoteService {
 
   void save(Note note);
 
-  void remove(Integer id);
+  void remove(int id);
 }

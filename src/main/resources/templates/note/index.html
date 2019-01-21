@@ -6,8 +6,8 @@
 </head>
 <body>
   <h1>Các ghi chú</h1>
-  <a th:href="@{/}">Create new Note</a>
-  <table th:each="note:${notes}" border="1" cellpadding="10" cellspacing="0">
+  <a th:href="@{/note/create}">Tạo ghi chú mới</a>
+  <table th:each="note:${notes}" border="1" cellpadding="30" cellspacing="0">
     <tr>
       <td>STT</td>
       <td>Tiêu đề</td>
