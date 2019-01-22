@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Xóa ghi chú</title>
+</head>
+<body>
+  <a th:href="@{/note/list}">Trở lại trang danh sách</a>
+  <h1>Xóa ghi chú</h1>
+  <form th:action="@{/note/delete}" th:method="post" th:object="${note}">
+    <input type="hidden" th:field="*{id}">
+    <table>
+      <tr>
+        <td>Tiêu đề</td>
+        <td th:text="${note.title}"></td>
+      </tr>
+      <tr>
+        <td>Nội dung</td>
+        <td th:text="${note.content}"></td>
+      </tr>
+      <tr>
+        <td>Thể loại</td>
+        <td th:text="${note.noteType.name}"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><input type="submit" value="Xóa"></td>
+      </tr>
+    </table>
+  </form>
+</body>
+</html>

@@ -3,25 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <title>Note</title>
+  <style>
+    table{width:100%;}
+    table td, table th { border: 1px solid grey;}
+    table th { background: #eee;}
+    .pagination-div{user-select: none;}
+    .pagination-div span{border-radius:3px;border:1px solid #999;
+      padding:5px;margin:10px 0px 0px 10px;display:inline-block}
+    span.selected{background:#ccf;}
+  </style>
 </head>
 <body>
   <h1>Các ghi chú</h1>
   <a th:href="@{/note/create}">Tạo ghi chú mới</a>
-  <table th:each="note:${notes}" border="1" cellpadding="30" cellspacing="0">
+  <p th:text="${success}"></p>
+
+  <table border="1" cellpadding="8" cellspacing="0">
     <tr>
       <td>STT</td>
       <td>Tiêu đề</td>
       <td>Phân loại</td>
       <td></td>
     </tr>
-    <tr>
+    <tr th:each="note:${notes}">
       <td></td>
       <td th:text="${note.title}"></td>
       <td th:text="${note.noteType.name}"></td>
       <td>
-        <a th:href="@{/}">Edit</a> | <a th:href="@{/}">Delete</a>
+        <a th:href="@{/note/edit/__${note.id}__}">Edit</a> | <a th:href="@{/note/delete/__${note.id}__}">Delete</a>
       </td>
     </tr>
   </table>
+  <div>
+    <a th:href="@{'/note/list'(page=${notes.number - 1})}" th:if="!${notes.first}">Prev</a>
+    <span th:text="${notes.number+1}"></span>/<span th:text="${notes.totalPages}"></span>
+    <a th:href="@{'/note/list'(page=${notes.number + 1})}" th:if="!${notes.last}">Next</a>
+  </div>
+  <!--<div class="pagination-div">
+   <span th:if="${notes.hasPrevious()}">
+       <a th:href="@{/notes(search=${search},page=${notes.number - 1},size=${notes.size})}">Previous</a>
+   </span>
+    <th:block th:each="i: ${#numbers.sequence(0, notes.totalPages - 1)}">
+      <span th:if="${notes.number == i}" class="selected">[[${i}+1]]</span>
+      <span th:unless="${notes.number == i}">
+            <a th:href="@{/notes(page=${i},size=${notes.size})}">[[${i}+1]]</a>
+       </span>
+    </th:block>
+    <span th:if="${notes.hasNext()}">
+       <a th:href="@{/notes(search=${search},page=${notes.number+1},size=${notes.size})}">Next</a>
+   </span>
+  </div>-->
 </body>
 </html>

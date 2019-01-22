@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service("noteService")
 public class NoteServiceImpl implements NoteService {
 
@@ -30,8 +32,13 @@ public class NoteServiceImpl implements NoteService {
   }
 
   @Override
-  public void remove(int id) {
+  public void remove(Integer id) {
     noteRepository.deleteById(id);
+  }
+
+  @Override
+  public Optional<Note> findById(Integer id) {
+    return noteRepository.findById(id);
   }
 
 
