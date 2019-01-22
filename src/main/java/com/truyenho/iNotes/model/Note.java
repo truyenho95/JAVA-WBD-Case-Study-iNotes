@@ -1,6 +1,8 @@
 package com.truyenho.iNotes.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "notes")
@@ -9,7 +11,12 @@ public class Note {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
+
+  @NotEmpty
+  @Size(max = 20)
   private String title;
+
+  @Size(max = 100)
   private String content;
 
   @ManyToOne

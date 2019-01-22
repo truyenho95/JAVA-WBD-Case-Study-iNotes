@@ -6,10 +6,11 @@ import com.truyenho.iNotes.service.NoteService;
 import com.truyenho.iNotes.service.NoteTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -28,7 +29,7 @@ public class NoteController {
   private NoteTypeService noteTypeService;
 
   @GetMapping(value = {"/", "/note/list"})
-  public ModelAndView index(@RequestParam(name="noteType") Optional<Integer> noteTypeId, @RequestParam(name="title") Optional<String> title, @PageableDefault(size = 5) Pageable pageable, @ModelAttribute("success") String success) {
+  public ModelAndView index(@RequestParam(name = "noteType") Optional<Integer> noteTypeId, @RequestParam(name = "title") Optional<String> title, @PageableDefault(size = 5) Pageable pageable, @ModelAttribute("success") String success) {
     Page<Note> notes;
     ModelAndView modelAndView = new ModelAndView("note/index");
     if (noteTypeId.isPresent() | title.isPresent()) {
@@ -50,9 +51,7 @@ public class NoteController {
 
     int totalPages = notes.getTotalPages();
     if (totalPages > 0) {
-      List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-        .boxed()
-        .collect(Collectors.toList());
+      List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().collect(Collectors.toList());
       modelAndView.addObject("pageNumbers", pageNumbers);
     }
 
@@ -64,17 +63,27 @@ public class NoteController {
     ModelAndView modelAndView = new ModelAndView("note/create");
     Iterable<NoteType> noteTypes = noteTypeService.findAll();
     modelAndView.addObject("note", new Note());
-    modelAndView.addObject("noteTypies", noteTypes);
+    modelAndView.addObject("noteTypes", noteTypes);
     return modelAndView;
   }
 
   @PostMapping("/note/create")
-  public ModelAndView createNote(@ModelAttribute("note") Note note) {
-    noteService.save(note);
-    ModelAndView modelAndView = new ModelAndView("redirect:/");
-    modelAndView.addObject("success", "Tạo ghi chú mới thành công!");
-    modelAndView.addObject("note", new Note());
-    return modelAndView;
+  public ModelAndView createNote(@Validated @ModelAttribute("note") Note note, BindingResult bindingResult) {
+    Iterable<NoteType> noteTypes = noteTypeService.findAll();
+
+    if (bindingResult.hasFieldErrors()) {
+      ModelAndView modelAndView = new ModelAndView("note/create");
+      modelAndView.addObject("note", new Note());
+      modelAndView.addObject("noteTypes", noteTypes);
+      modelAndView.addAllObjects(bindingResult.getModel());
+      return modelAndView;
+    } else {
+      noteService.save(note);
+      ModelAndView modelAndView = new ModelAndView("redirect:/");
+      modelAndView.addObject("success", "Tạo ghi chú mới thành công!");
+      modelAndView.addObject("note", new Note());
+      return modelAndView;
+    }
   }
 
   @GetMapping("/note/edit/{id}")

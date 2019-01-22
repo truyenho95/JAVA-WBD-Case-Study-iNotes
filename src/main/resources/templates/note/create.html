@@ -12,16 +12,18 @@
       <tr>
         <td>Tiêu đề</td>
         <td><input type="text" th:field="*{title}"></td>
+        <td th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</td>
       </tr>
       <tr>
         <td>Nội dung</td>
         <td><textarea th:field="*{content}" cols="30" th:rows="5"></textarea></td>
+        <td th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Content Error</td>
       </tr>
       <tr>
         <td>Thể loại</td>
         <td>
           <select th:field="*{noteType}">
-            <option th:each="noteType:${noteTypies}" th:text="${noteType.name}" th:value="${noteType.id}"></option>
+            <option th:each="noteType:${noteTypes}" th:text="${noteType.name}" th:value="${noteType.id}"></option>
           </select>
         </td>
       </tr>

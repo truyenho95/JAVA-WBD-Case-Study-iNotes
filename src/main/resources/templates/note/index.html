@@ -16,16 +16,17 @@
       background: #eee;
     }
 
-    .pagination-div {
+    .pagination {
       user-select: none;
+      display: inline;
     }
 
-    .pagination-div span {
+    .pagination a {
       border-radius: 3px;
       border: 1px solid #999;
       padding: 5px;
       margin: 10px 0px 0px 10px;
-      display: inline-block
+      display: inline-block;
     }
 
     a.active {
@@ -64,14 +65,18 @@
   </tr>
 </table>
 <div>
-  <a th:href="@{'/note/list'(page=${notes.number - 1})}" th:if="!${notes.first}">Prev</a>
+  <div class="pagination">
+    <a th:href="@{'/note/list'(page=${notes.number - 1})}" th:if="!${notes.first}">Prev</a>
+  </div>
   <div th:if="${notes.totalPages > 0}" class="pagination"
        th:each="pageNumber : ${pageNumbers}">
-    <a th:href="@{/note/list(size=${notes.size}, page=${pageNumber})}"
+    <a th:href="@{/note/list(page=${pageNumber - 1})}"
        th:text="${pageNumber}"
        th:class="${pageNumber==notes.number + 1} ? active"></a>
   </div>
-  <a th:href="@{'/note/list'(page=${notes.number + 1})}" th:if="!${notes.last}">Next</a>
+  <div class="pagination">
+    <a th:href="@{'/note/list'(page=${notes.number + 1})}" th:if="!${notes.last}">Next</a>
+  </div>
 </div>
 </body>
 </html>
