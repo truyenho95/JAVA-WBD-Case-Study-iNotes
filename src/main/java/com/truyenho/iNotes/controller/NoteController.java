@@ -96,12 +96,22 @@ public class NoteController {
   }
 
   @PostMapping("/note/edit")
-  public ModelAndView editNote(@ModelAttribute("note") Note note) {
-    noteService.save(note);
-    ModelAndView modelAndView = new ModelAndView("redirect:/");
-    modelAndView.addObject("success", "Sửa ghi chú thành công");
-    modelAndView.addObject("note", new Note());
-    return modelAndView;
+  public ModelAndView editNote(@Validated @ModelAttribute("note") Note note, BindingResult bindingResult) {
+    Iterable<NoteType> noteTypes = noteTypeService.findAll();
+
+    if (bindingResult.hasFieldErrors()) {
+      ModelAndView modelAndView = new ModelAndView("/note/edit");
+      modelAndView.addObject("note", note);
+      modelAndView.addObject("noteTypes", noteTypes);
+      modelAndView.addAllObjects(bindingResult.getModel());
+      return modelAndView;
+    } else {
+      noteService.save(note);
+      ModelAndView modelAndView = new ModelAndView("redirect:/");
+      modelAndView.addObject("success", "Sửa ghi chú thành công");
+      modelAndView.addObject("note", new Note());
+      return modelAndView;
+    }
   }
 
   @GetMapping("/note/delete/{id}")

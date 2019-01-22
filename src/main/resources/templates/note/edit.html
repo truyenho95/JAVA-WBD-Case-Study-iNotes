@@ -13,10 +13,12 @@
       <tr>
         <td>Tiêu đề</td>
         <td><input th:field="*{title}"></td>
+        <td th:errors="*{title}" th:if="${#fields.hasErrors('title')}">Title Error</td>
       </tr>
       <tr>
         <td>Nội dung</td>
-        <td><input th:field="*{content}"></td>
+        <td><textarea cols="30" th:field="*{content}" th:rows="5"></textarea></td>
+        <td th:errors="*{content}" th:if="${#fields.hasErrors('content')}">Content Error</td>
       </tr>
       <tr>
         <td>Thể loại</td>
