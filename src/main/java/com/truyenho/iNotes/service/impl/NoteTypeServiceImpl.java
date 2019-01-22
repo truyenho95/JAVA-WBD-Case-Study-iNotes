@@ -6,6 +6,8 @@ import com.truyenho.iNotes.service.NoteTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service("noteTypeService")
 public class NoteTypeServiceImpl implements NoteTypeService {
   @Autowired
@@ -24,5 +26,10 @@ public class NoteTypeServiceImpl implements NoteTypeService {
   @Override
   public void remove(int id) {
     noteTypeRepository.deleteById(id);
+  }
+
+  @Override
+  public Optional<NoteType> findById(Integer id) {
+    return noteTypeRepository.findById(id);
   }
 }

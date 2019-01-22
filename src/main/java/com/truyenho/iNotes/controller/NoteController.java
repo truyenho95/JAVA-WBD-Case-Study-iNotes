@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,13 +25,19 @@ public class NoteController {
   private NoteTypeService noteTypeService;
 
   @GetMapping(value = {"/", "/note/list"})
-  public ModelAndView index(@RequestParam(name="noteType") Optional<Integer> noteTypeId, @RequestParam(name="title") Optional<String> title, Pageable pageable, @ModelAttribute("success") String success) {
+  public ModelAndView index(@RequestParam(name="noteType") Optional<Integer> noteTypeId, @RequestParam(name="title") Optional<String> title, @PageableDefault(size = 5) Pageable pageable, @ModelAttribute("success") String success) {
     Page<Note> notes;
     ModelAndView modelAndView = new ModelAndView("note/index");
     if (noteTypeId.isPresent() | title.isPresent()) {
-      notes = noteService.findAllByTitleContaining(title.get(), pageable);
+      if (noteTypeId.get() == -1) {
+        notes = noteService.findAllByTitleContaining(title.get(), pageable);
+      } else {
+        notes = noteService.findAllByTitleContainingAndNoteType_Id(title.get(), noteTypeId.get(), pageable);
+      }
+      modelAndView.addObject("search", title.get());
     } else {
       notes = noteService.findAll(PageRequest.of(pageable.getPageNumber(), 5));
+      modelAndView.addObject("search", "");
     }
 
     Iterable<NoteType> noteTypes = noteTypeService.findAll();

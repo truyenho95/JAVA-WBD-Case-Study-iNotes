@@ -11,6 +11,8 @@ public interface NoteService {
 
   Page<Note> findAllByTitleContaining(String title, Pageable pageable);
 
+  Page<Note> findAllByTitleContainingAndNoteType_Id(String title, Integer noteTypeId, Pageable pageable);
+
   void save(Note note);
 
   void remove(Integer id);
