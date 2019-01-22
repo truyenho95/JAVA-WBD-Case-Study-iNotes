@@ -13,7 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 public class NoteController {
@@ -36,7 +39,7 @@ public class NoteController {
       }
       modelAndView.addObject("search", title.get());
     } else {
-      notes = noteService.findAll(PageRequest.of(pageable.getPageNumber(), 5));
+      notes = noteService.findAll(pageable);
       modelAndView.addObject("search", "");
     }
 
@@ -44,6 +47,14 @@ public class NoteController {
     modelAndView.addObject("noteTypes", noteTypes);
     modelAndView.addObject("notes", notes);
     modelAndView.addObject("success", success);
+
+    int totalPages = notes.getTotalPages();
+    if (totalPages > 0) {
+      List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+        .boxed()
+        .collect(Collectors.toList());
+      modelAndView.addObject("pageNumbers", pageNumbers);
+    }
 
     return modelAndView;
   }

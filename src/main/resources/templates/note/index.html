@@ -28,7 +28,7 @@
       display: inline-block
     }
 
-    span.selected {
+    a.active {
       background: #ccf;
     }
   </style>
@@ -65,9 +65,13 @@
 </table>
 <div>
   <a th:href="@{'/note/list'(page=${notes.number - 1})}" th:if="!${notes.first}">Prev</a>
-  <span th:text="${notes.number+1}"></span>/<span th:text="${notes.totalPages}"></span>
+  <div th:if="${notes.totalPages > 0}" class="pagination"
+       th:each="pageNumber : ${pageNumbers}">
+    <a th:href="@{/note/list(size=${notes.size}, page=${pageNumber})}"
+       th:text="${pageNumber}"
+       th:class="${pageNumber==notes.number + 1} ? active"></a>
+  </div>
   <a th:href="@{'/note/list'(page=${notes.number + 1})}" th:if="!${notes.last}">Next</a>
-</div>
 </div>
 </body>
 </html>
